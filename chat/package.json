@@ -22,6 +22,7 @@
   "author": "vincent.dusautoir@epitech.eu gauthier.cler@epitech.eu anas.buyumad@epitech.eu",
   "license": "ISC",
   "dependencies": {
+    "ent": "^2.2.0",
     "socket.io": "^1.7.3"
   }
 }

@@ -3,6 +3,7 @@
  */
 const http = require("http");
 const fs = require("fs");
+const ent = require("ent");
 
 const hostname = "127.0.0.1";
 const port = "1337";
@@ -23,11 +24,18 @@ const server = http.createServer((req, res) => {
 const io = require("socket.io")(server);
 
 io.on('connection', (socket) => {
-    console.log()
-});
-
-io.on('message', (data) => {
-
+    socket.on('message', (message) => {
+        message = ent.encode(message);
+        socket.broadcast.emit('message', {user: socket.user, message: message});
+        socket.emit('message', {user: socket.user, message: message});
+    });
+    socket.on('newUser', (user) => {
+        console.log("new user " + user);
+        user = ent.encode(user);
+        socket.user = user;
+        socket.broadcast.emit('message', {user: socket.user, message: "joined the room"});
+        socket.emit('message', {user: socket.user, message: "joined the room"});
+    });
 });
 
 server.listen(port, hostname, () => {

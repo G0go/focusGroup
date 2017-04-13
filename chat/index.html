@@ -30,22 +30,22 @@
     </div>
 
     <div class="row">
-        <form class="col s12">
-            <div class="row">
-                <div class="input-field col s12">
-                    <textarea id="message" class="materialize-textarea"></textarea>
-                    <label for="message">Message</label>
-                </div>
-            </div>
-        </form>
-    </div>
+        <div class="input-field col s12">
+            <form id="form">
+                <input id="message" type="text" class="validate">
+                <label for="message">Message</label>
+            </form>
+        </div>
+
+    <ul class="collection with-header">
+        <li class="collection-header" id="chat"><h4>Chat</h4></li>
+    </ul>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
     <script type="text/javascript">
-        let pseudo = ""
-        $('#pseudo').val(pseudo);
+        $('#pseudo').val("");
         $(document).ready(function(){
             $('#modal').modal({
                 dismissible: false, // Modal can be dismissed by clicking outside of the modal
@@ -57,11 +57,39 @@
             }).modal('open');
         });
 
+        const socket = io.connect(window.location.href, {secure: true});
+
+        class User {
+            constructor(name) { this.name = name }
+            get name() { return this._name }
+            set name(name) { this._name = name }
+            send(message) { socket.emit('message', message) }
+            register() { socket.emit('newUser', this.name) }
+        }
+
+        class Chat {
+            constructor() {}
+            addMessage(user, message) { $('#chat').append('<li class="collection-item">' + user + ': ' + message +'</li>') }
+        }
+
+        let user = new User(pseudo);
+        let chat = new Chat();
+
+        socket.on('message', (data) => {
+            chat.addMessage(data.user, data.message);
+        });
+
+        $('#form').submit((event) => {
+            let message = $('#message').val();
+            if (message.trim().length > 0)
+                user.send(message);
+        });
+
         $('#agree').click((event) => {
-            if ($("#pseudo").val().length > 0)
-            {
+            if ($("#pseudo").val().length > 0) {
                 $('#modal').modal('close');
-                pseudo = $('#pseudo').val();
+                user.name = $('#pseudo').val();
+                user.register();
             }
         })
     </script>
