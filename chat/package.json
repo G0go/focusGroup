@@ -1,0 +1,27 @@
+{
+  "name": "chat",
+  "version": "1.0.0",
+  "description": "Basic chat using nodejs and socketIO",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/g0go/focusGroup/tree/master/chat"
+  },
+  "keywords": [
+    "NodeJS",
+    "SocketIO",
+    "chat",
+    "javascript",
+    "html5",
+    "focusgroup"
+  ],
+  "author": "vincent.dusautoir@epitech.eu gauthier.cler@epitech.eu anas.buyumad@epitech.eu",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^1.7.3"
+  }
+}
