@@ -5,8 +5,8 @@ const http = require("http");
 const fs = require("fs");
 const ent = require("ent");
 
-const hostname = "127.0.0.1";
-const port = "1337";
+const hostname = "0.0.0.0";
+const port = "80";
 
 const server = http.createServer((req, res) => {
     res.statusCode = 200;
@@ -35,6 +35,11 @@ io.on('connection', (socket) => {
         socket.user = user;
         socket.broadcast.emit('message', {user: socket.user, message: "joined the room"});
         socket.emit('message', {user: socket.user, message: "joined the room"});
+    });
+
+    socket.on('disconnect', () => {
+        socket.broadcast.emit('message', {user: socket.user, message: "leave the room"});
+        socket.emit('message', {user: socket.user, message: "leave the room"});
     });
 });
 

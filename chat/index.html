@@ -82,7 +82,10 @@
         $('#form').submit((event) => {
             let message = $('#message').val();
             if (message.trim().length > 0)
+            {
                 user.send(message);
+                $('#message').val("");
+            }
         });
 
         $('#agree').click((event) => {
