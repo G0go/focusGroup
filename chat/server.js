@@ -13,8 +13,7 @@ const server = http.createServer((req, res) => {
     res.setHeader("Content-Type", "text/html");
     fs.readFile(__dirname + "/index.html", 'utf8', (error, respond) => {
         if (error) {
-            res.statusCode = 404;
-            res.end("ERROR 404 NOT FOUND");
+            res.statusCode(404).end("ERROR 404 NOT FOUND");
         } else {
             res.end(respond);
         }
@@ -24,13 +23,15 @@ const server = http.createServer((req, res) => {
 const io = require("socket.io")(server);
 
 io.on('connection', (socket) => {
+    let address = socket.request.connection.remoteAddress;
+
     socket.on('message', (message) => {
         message = ent.encode(message);
         socket.broadcast.emit('message', {user: socket.user, message: message});
         socket.emit('message', {user: socket.user, message: message});
     });
     socket.on('newUser', (user) => {
-        console.log("new user " + user);
+        console.log("new user " + user + " " + address);
         user = ent.encode(user);
         socket.user = user;
         socket.broadcast.emit('message', {user: socket.user, message: "joined the room"});
